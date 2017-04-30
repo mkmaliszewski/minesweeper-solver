@@ -46,6 +46,7 @@ public class MinesweeperGame {
                 gameState[i][j] = readCellState(i, j, screen);
             }
         }
+//        printGameState();
     }
     
     public void printGameState(){
@@ -56,14 +57,8 @@ public class MinesweeperGame {
             System.out.println();
         }
     }
-    //567 - unknown
-    //255 - 1
-    //130 - 2
-    //515 - 3
-    //479 - 4
-    //480 - known
-    //61 - flag
-    //0 - bomb
+    //567 - unknown; 255 - 1; 130 - 2; 515 - 3; 479 - 4
+    //480 - known; 61 - flag; 0 - bomb
     public int readCellState(int column, int row, BufferedImage screen) throws InterruptedException {
         Color color = new Color(screen.getRGB(73 + 35 * (row - 1),
                 310 + 35 * (column - 1)));

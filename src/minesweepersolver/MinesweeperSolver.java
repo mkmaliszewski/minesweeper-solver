@@ -30,14 +30,7 @@ public class MinesweeperSolver {
         
         int temp = 0 ;
         game = new MinesweeperGame();
-        int rows = game.returnRows();
-        int columns = game.returnColumns();
-        isAlreadyClicked = new boolean[rows][columns];
-        for (int i = 0; i < rows; i++){
-            for (int j = 0; j < columns; j++){
-                isAlreadyClicked[i][j] = false;
-            }
-        }
+        
 //        game.readGameState();
         while(true){
             Thread.sleep(20);
@@ -47,14 +40,13 @@ public class MinesweeperSolver {
             flagNumber(1);
             flagNumber(2);
             flagNumber(3);
-//            game.printGameState();
-//            flagOnes();
-//            Thread.sleep(20);
+            flagNumber(4);
+
             clearUnknownCells();
 
             temp++;    
 
-            if (temp == 15){
+            if (temp == 10){
                 
                 break;
             }
@@ -62,12 +54,14 @@ public class MinesweeperSolver {
     }
     
     public static void clearUnknownCells() throws InterruptedException{
-        final long startTime = System.currentTimeMillis();
-        
+        long start = System.currentTimeMillis();
+        int rows = game.returnRows();
+        int columns = game.returnColumns();
         boolean isBomb, isUnknownCell;
         int [][] gameState = game.returnGameState();
-        for (int i = 1; i < 10; i++){
-            for (int j = 1; j < 10; j++){
+        
+        for (int i = 1; i < rows - 1; i++){
+            for (int j = 1; j < columns - 1; j++){
                 if (gameState[i][j] != 0 && gameState[i][j] != 6 &&
                         gameState[i][j] != -1 && gameState[i][j] != 7){
                     isBomb = false;
@@ -91,20 +85,17 @@ public class MinesweeperSolver {
                 }
             }
         }
-        final long endTime = System.currentTimeMillis();
-        System.out.println("Total execution time of clearing: " + (endTime - startTime) );
+        long end = System.currentTimeMillis();
+        System.out.println("time of clearing: " + (end-start));
     }
     
     public static void flagNumber(int number) throws InterruptedException{
-        final long startTime = System.currentTimeMillis();
-
-
+        long start = System.currentTimeMillis();
         int[][] gameState = game.returnGameState();
         int rows = game.returnRows();
         int columns = game.returnColumns();
-        int unknownCells = 0;
-        int flaggedCells = 0;
-        int minePositionX = 0, minePositionY = 0;
+        int unknownCells, flaggedCells;
+        int minePositionRow = 0, minePositionColumn = 0;
         
         for (int i = 1; i < rows - 1; i++){
             for (int j = 1; j < columns - 1; j++){
@@ -119,8 +110,8 @@ public class MinesweeperSolver {
                             
                             if (gameState[i + k][j + l] == 0){
                                 unknownCells++;
-                                minePositionX = i + k;
-                                minePositionY = j + l;
+                                minePositionRow = i + k;
+                                minePositionColumn = j + l;
                             }
                             else if (gameState[i + k][j + l] == 7){
                                 flaggedCells++;
@@ -128,18 +119,19 @@ public class MinesweeperSolver {
                         }
                     }
 
-                    if (unknownCells == 1 && flaggedCells == number - 1){
-//                        Thread.sleep(1000);
-                        game.returnRobot().moveMouse(minePositionX, minePositionY);
+                    if ((unknownCells == 1 && flaggedCells == number - 1) || 
+                            (unknownCells == 2 && flaggedCells == number - 2)){
+                        game.returnRobot().moveMouse(minePositionRow, minePositionColumn);
                         game.returnRobot().clickMouse(right);
-                        game.updateGameState(minePositionX, minePositionY, 7);
+                        gameState[minePositionRow][minePositionColumn] = 7;
+                        game.updateGameState(minePositionRow, minePositionColumn, 7);
+//                        Thread.sleep(1000);
                     }
                 }
             }
         }
-        
-        final long endTime = System.currentTimeMillis();
-        System.out.println("Total execution time flag" + number + ": " + (endTime - startTime) );
+        long end = System.currentTimeMillis();
+        System.out.println("time of flag " + number + ": " + (end - start));
     }
     
 }
