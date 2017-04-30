@@ -33,32 +33,25 @@ public class MinesweeperGame {
         }
         
         Random generator = new Random();
-        int x = generator.nextInt(9);
-        int y = generator.nextInt(9);
+        int x = generator.nextInt(9) + 1;
+        int y = generator.nextInt(9) + 1;
         minesweeperRobot.moveMouse(x, y);
         minesweeperRobot.clickMouse(InputEvent.BUTTON1_DOWN_MASK);
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MinesweeperGame.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     public void readGameState() throws InterruptedException {
         BufferedImage screen = minesweeperRobot.returnScreenshot();
         for (int i = 1; i < rows - 1; i++){
             for (int j = 1; j < columns - 1; j++){
-//                minesweeperRobot.moveMouse(i - 1, j - 1);
-//                Thread.sleep(100);
                 gameState[i][j] = readCellState(i, j, screen);
             }
         }
     }
     
-    public void printGameState(int[][] gs){
+    public void printGameState(){
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < columns; j++){
-                System.out.print(gs[i][j] + " ");
+                System.out.print(gameState[i][j] + " ");
             }
             System.out.println();
         }

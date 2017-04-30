@@ -22,7 +22,7 @@ public class MinesweeperRobot {
     }
     
     public void moveMouse(int positionX, int positionY){
-            robot.mouseMove(73 + 35 * positionY, 310 +  35 * positionX);
+            robot.mouseMove(73 + 35 * (positionY - 1), 310 +  35 * (positionX - 1));
     }
     
     public BufferedImage returnScreenshot(){
