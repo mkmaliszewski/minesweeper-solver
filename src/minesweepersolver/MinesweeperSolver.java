@@ -51,68 +51,14 @@ public class MinesweeperSolver {
 //            flagOnes();
 //            Thread.sleep(20);
             clearUnknownCells();
-//            checkIfNumber(2);
+
             temp++;    
 
-            if (temp == 8){
+            if (temp == 15){
                 
                 break;
             }
         }
-//System.out.println("lol");
-    }
-    
-    
-    public static void flagOnes() throws InterruptedException{
-        int[][] gs = game.returnGameState();
-        int rows = game.returnRows();
-        int columns = game.returnColumns();
-        for (int i = 1; i < rows - 1; i++){
-            for (int j = 1; j < columns - 1; j++){
-                if (gs[i][j] == 1){
-                    int[] pos = checkIfCorner(i, j, gs);
-                    if (pos[0] != 0 && pos[1] != 0){
-                        game.returnRobot().moveMouse(pos[0] - 1, pos[1] - 1);
-                        game.returnRobot().clickMouse(right);
-//                        Thread.sleep(500);
-//                        
-//                        gs[pos[0]][pos[1]] = 7;
-                        game.updateGameState(pos[0], pos[1], 7);
-//                        clearUnknownCells(pos[0], pos[1], gs);
-//                        game.printGameState(gs);    
-                    }
-                }
-            }
-        }
-    }
-    
-    public static int[] checkIfCorner(int row, int column, int[][] gs){
-        int unknownCorners = 0;
-        int[] minePosition = new int[2];
-        
-        for (int i = -1; i < 2; i++){
-            for (int j = -1; j < 2; j++){
-                if (i == 0 || j == 0){
-                    continue;
-                }
-                if (gs[row + i][column + j] == 0){
-                    unknownCorners++;
-                    minePosition[0] = row + i;
-                    minePosition[1] = column + j;
-                    if (gs[row][column + j] == 0 || gs[row + i][column] == 0 ||
-                            gs[row][column + j] == 7 || gs[row + i][column] == 7){
-                        unknownCorners--;
-                    }
-                }
-            }
-        }
-
-        
-        if (unknownCorners == 1){
-//            System.out.println(minePosition[0] + " " + minePosition[1]);
-            return minePosition;
-        }
-        else return new int[]{0, 0};
     }
     
     public static void clearUnknownCells() throws InterruptedException{
@@ -146,7 +92,7 @@ public class MinesweeperSolver {
             }
         }
         final long endTime = System.currentTimeMillis();
-        System.out.println("Total execution time of clearing" + (endTime - startTime) );
+        System.out.println("Total execution time of clearing: " + (endTime - startTime) );
     }
     
     public static void flagNumber(int number) throws InterruptedException{
@@ -193,8 +139,7 @@ public class MinesweeperSolver {
         }
         
         final long endTime = System.currentTimeMillis();
-
-System.out.println("Total execution time flag" + number + ": " + (endTime - startTime) );
+        System.out.println("Total execution time flag" + number + ": " + (endTime - startTime) );
     }
     
 }
