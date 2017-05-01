@@ -13,7 +13,7 @@ public class MinesweeperSolver {
     private static MinesweeperGame game;
     private static int left = InputEvent.BUTTON1_DOWN_MASK;
     private static int right = InputEvent.BUTTON3_DOWN_MASK;
-    private static boolean[][] isAlreadyClicked;
+    private static boolean hasGameStateChanged;
     
     public static void main(String[] args) throws InterruptedException {
         try {
@@ -27,12 +27,13 @@ public class MinesweeperSolver {
 //            Logger.getLogger(MinesweeperSolver.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
-        int temp = 0 ;
+        int counter = 0;
+        int temp = 0;
         game = new MinesweeperGame();
-        
-//        game.readGameState();
-        while(true){
+        game.makeRandomMove();
+//        long start = System.currentTimeMillis();
+        while (true){
+            hasGameStateChanged = false;
             Thread.sleep(20);
             game.readGameState();
             Thread.sleep(20);
@@ -41,20 +42,36 @@ public class MinesweeperSolver {
             flagNumber(2);
             flagNumber(3);
             flagNumber(4);
+            flagNumber(5);
 
             clearUnknownCells();
 
-            temp++;    
-
-            if (temp == 10){
-                
-                break;
+            if (temp++ == 15)
+                break;  
+            if (hasGameStateChanged){
+                continue;
             }
+//            if (game.checkIfGameOver()){
+//                break;
+//            }
+            else {
+                counter++;
+                if (counter == 3){
+                    Thread.sleep(5000);
+                    game.makeRandomMove();
+                    counter = 0;
+                    
+                }
+            }
+            
+            
         }
+//        long end = System.currentTimeMillis();
+//        System.out.println("main loop time: " + (end - start));
     }
     
     public static void clearUnknownCells() throws InterruptedException{
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
         int rows = game.returnRows();
         int columns = game.returnColumns();
         boolean isBomb, isUnknownCell;
@@ -79,18 +96,18 @@ public class MinesweeperSolver {
                     
                     if (isBomb && isUnknownCell){
                         game.returnRobot().moveMouse(i, j);
-                        game.returnRobot().pressSpace();
+                        game.returnRobot().pressSpace();  
 //                        Thread.sleep(1000);
                     }
                 }
             }
         }
-        long end = System.currentTimeMillis();
-        System.out.println("time of clearing: " + (end-start));
+//        long end = System.currentTimeMillis();
+//        System.out.println("time of clearing: " + (end-start));
     }
     
     public static void flagNumber(int number) throws InterruptedException{
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
         int[][] gameState = game.returnGameState();
         int rows = game.returnRows();
         int columns = game.returnColumns();
@@ -125,13 +142,13 @@ public class MinesweeperSolver {
                         game.returnRobot().clickMouse(right);
                         gameState[minePositionRow][minePositionColumn] = 7;
                         game.updateGameState(minePositionRow, minePositionColumn, 7);
+                        hasGameStateChanged = true;
 //                        Thread.sleep(1000);
                     }
                 }
             }
         }
-        long end = System.currentTimeMillis();
-        System.out.println("time of flag " + number + ": " + (end - start));
+//        long end = System.currentTimeMillis();
+//        System.out.println("time of flag " + number + ": " + (end - start));
     }
-    
 }
