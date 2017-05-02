@@ -22,10 +22,11 @@ public class MinesweeperRobot {
     }
     
     public void moveMouse(int positionX, int positionY){
-        robot.mouseMove(73 + 35 * (positionY - 1), 310 +  35 * (positionX - 1));
+//        robot.mouseMove(73 + 35 * (positionY - 1), 310 +  35 * (positionX - 1));
+        robot.mouseMove(51 + 35 *(positionY - 1), 310 + 35 * (positionX - 1));
     }
     
-    public BufferedImage returnScreenshot(){
+    public BufferedImage makeScreenshot(){
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         Rectangle rectangle = new Rectangle(dimension);
         BufferedImage screenshot = robot.createScreenCapture(rectangle);

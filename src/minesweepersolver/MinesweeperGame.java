@@ -11,14 +11,11 @@ public class MinesweeperGame {
     // 0 - unknown, 1 - 5 - number of mines, 6 - known, 
     // 7 - flag, 8 - mine, -1 - out of bounds
     private int[][]  gameState;
-    private int rows, columns;
-    private MinesweeperRobot minesweeperRobot;
-    private int flags = 0;
+    private int rows = 16, columns = 30;
      
     public MinesweeperGame(){
-        minesweeperRobot = new MinesweeperRobot();
-        rows = 9 + 2;
-        columns = 9 + 2;
+        rows += 2;
+        columns += 2;
         gameState = new int[rows][columns];
         
         //game initialization
@@ -34,25 +31,22 @@ public class MinesweeperGame {
         }
     }
     
-    public void readGameState() throws InterruptedException {
-        BufferedImage screen = minesweeperRobot.returnScreenshot();
+    public void readGameState(MinesweeperRobot robot) throws InterruptedException {
+        BufferedImage screen = robot.makeScreenshot();
+        
         for (int i = 1; i < rows - 1; i++){
             for (int j = 1; j < columns - 1; j++){
                 gameState[i][j] = readCellState(i, j, screen);
-                if (gameState[i][j] == 7){
-                    flags++;
-                }
                 if (gameState[i][j] == 8){
                     System.exit(0);
                 }
             }
         }
-//        printGameState();
     }
     
     public void printGameState(){
-        for (int i = 0; i < rows; i++){
-            for (int j = 0; j < columns; j++){
+        for (int i = 1; i < rows - 1; i++){
+            for (int j = 1; j < columns - 1; j++){
                 System.out.print(gameState[i][j] + " ");
             }
             System.out.println();
@@ -74,14 +68,17 @@ public class MinesweeperGame {
     //567 - unknown; 255 - 1; 130 - 2; 515 - 3; 479 - 4
     //494 - 5; 480 - known; 61 - flag; 0 - bomb
     public int readCellState(int column, int row, BufferedImage screen) throws InterruptedException {
-        Color color = new Color(screen.getRGB(73 + 35 * (row - 1),
+//        Color color = new Color(screen.getRGB(73 + 35 * (row - 1),
+//                310 + 35 * (column - 1)));
+        Color color = new Color(screen.getRGB(51 + 35 * (row - 1),
                 310 + 35 * (column - 1)));
-//        System.out.println(color);
-
         int sum = color.getRed() + color.getGreen() + color.getBlue();
         int state;
+//        System.out.println(color);
         switch(sum){
-        case 567:   color = new Color(screen.getRGB(73 + 35 * (row - 1),
+        case 567:   //color = new Color(screen.getRGB(73 + 35 * (row - 1),
+                    //    310 + 35 * (column - 1) + 10));
+                    color = new Color(screen.getRGB(51 + 35 * (row - 1),
                         310 + 35 * (column - 1) + 10));
                     sum = color.getRed() + color.getGreen() + color.getBlue();
                     if (sum == 480)
@@ -105,24 +102,8 @@ public class MinesweeperGame {
                     break;
         default:    state = 0;
         }
+
         return state;       
-    }
-    
-    public void makeRandomMove() throws InterruptedException{
-        Random generator = new Random();
-        int x, y;
-        boolean isProperCell = false;
-        do {
-            x = generator.nextInt(9) + 1;
-            y = generator.nextInt(9) + 1;
-            if (gameState[x][y] == 0){
-                isProperCell = true;    
-            }
-        } while (!isProperCell);
-        
-        minesweeperRobot.moveMouse(x, y);
-        minesweeperRobot.clickMouse(InputEvent.BUTTON1_DOWN_MASK);
-//        Thread.sleep(1000);
     }
     
     public int returnRows(){
@@ -135,14 +116,6 @@ public class MinesweeperGame {
     
     public int[][] returnGameState(){
         return gameState;
-    }
-    
-    public MinesweeperRobot returnRobot(){
-        return minesweeperRobot;
-    }
-    
-    public void click(int x, int y){
-        minesweeperRobot.moveMouse(x, y);
     }
     
     public void updateGameState(int i, int j, int value){
