@@ -12,18 +12,27 @@ import java.util.logging.Logger;
 
 public class MinesweeperRobot {
     private Robot robot;
+    private int offX, offY;
 
-    public MinesweeperRobot(){
+    public MinesweeperRobot(String level){
         try {
             robot = new Robot();
         } catch (AWTException ex) {
             Logger.getLogger(MinesweeperRobot.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        switch(level){
+            case "beginner":
+            case "intermediate":    offX = 73;
+                                    break;
+            case "expert":          offX = 51;
+                                    break;
+        }
+        offY = 310;
     }
     
     public void moveMouse(int positionX, int positionY){
-//        robot.mouseMove(73 + 35 * (positionY - 1), 310 +  35 * (positionX - 1));
-        robot.mouseMove(51 + 35 *(positionY - 1), 310 + 35 * (positionX - 1));
+        robot.mouseMove(offX + 35 *(positionY - 1), offY + 35 * (positionX - 1));
     }
     
     public BufferedImage makeScreenshot(){

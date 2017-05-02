@@ -11,11 +11,19 @@ public class MinesweeperSolver {
     private int left = InputEvent.BUTTON1_DOWN_MASK;
     private int right = InputEvent.BUTTON3_DOWN_MASK;
     private boolean hasGameStateChanged;
+    private int maxTries;
     
-    public MinesweeperSolver(){
-        game = new MinesweeperGame();
-        robot = new MinesweeperRobot();
-        
+    public MinesweeperSolver(String level){
+        game = new MinesweeperGame(level);
+        robot = new MinesweeperRobot(level);
+        switch (level){
+            case "beginner":        maxTries = 20;
+                                    break;
+            case "intermediate":    maxTries = 50;
+                                    break;
+            case "expert":          maxTries = 150;
+                                    break;
+        }
         try {
             solveGame();
         } catch (InterruptedException ex) {
@@ -23,22 +31,23 @@ public class MinesweeperSolver {
         }
     }
     
-    public void clearUnknownCells() throws InterruptedException{
+    public void clearUnknownCells(){
         int rows = game.returnRows();
         int columns = game.returnColumns();
-        boolean isBomb, isUnknownCell;
+        int howManyFlags;
+        boolean isUnknownCell;
         int [][] gameState = game.returnGameState();
         
         for (int i = 1; i < rows - 1; i++){
             for (int j = 1; j < columns - 1; j++){
-                if (gameState[i][j] != 0 && gameState[i][j] != 6 &&
+                if (gameState[i][j] != 0 && gameState[i][j] != 9 &&
                         gameState[i][j] != -1 && gameState[i][j] != 7){
-                    isBomb = false;
+                    howManyFlags = 0;
                     isUnknownCell = false;
                     for (int k = -1; k < 2; k++){
                         for (int l = -1; l < 2; l++){
                             if (gameState[i + k][j + l] == 7){
-                                isBomb = true;
+                                howManyFlags++;
                             }
                             else if(gameState[i + k][j + l] == 0){
                                 isUnknownCell = true;
@@ -46,17 +55,16 @@ public class MinesweeperSolver {
                         }
                     }
                     
-                    if (isBomb && isUnknownCell){
+                    if (howManyFlags == gameState[i][j] && isUnknownCell){
                         robot.moveMouse(i, j);
                         robot.pressSpace();  
-//                        Thread.sleep(1000);
                     }
                 }
             }
         }
     }
     
-    public void flagNumber(int number) throws InterruptedException{
+    public void flagNumber(int number){
         int[][] gameState;
         int rows = game.returnRows();
         int columns = game.returnColumns();
@@ -92,54 +100,84 @@ public class MinesweeperSolver {
                         robot.clickMouse(right);
                         game.updateGameState(minePositionRow, minePositionColumn, 7);
                         hasGameStateChanged = true;
-//                        Thread.sleep(1000);
                     }
                 }
             }
         }
     }
     
-    public void makeRandomMove(){
+    public void makeRandomMove() throws InterruptedException{
         int[][] gameState = game.returnGameState();
         Random generator = new Random();
-        int x, y;
-        boolean isProperCell = false;
+        int x, y, cellState = 1, unknownCells, cellCounter= 2;
         int rows = game.returnRows();
         int columns = game.returnColumns();
         
-        do {
-            x = generator.nextInt(rows - 2) + 1;
-            y = generator.nextInt(columns - 2) + 1;
-            if (gameState[x][y] == 0){
-                isProperCell = true;    
+        outer:
+        for (int i = 1; i < rows - 1; i++){
+            for (int j = 1; j < columns - 1; j++){
+                gameState = game.returnGameState();
+                if (gameState[i][j] == cellState){
+                    unknownCells = 0;
+                    for (int k = -1; k < 2; k++){
+                        for (int l = -1; l < 2; l++){
+                            if (k == 0 && l == 0){
+                                continue;
+                            }
+                            
+                            if (gameState[i + k][j + l] == 0){
+                                unknownCells++;
+                            }
+                        }
+                    }
+
+                    if (unknownCells == cellCounter){
+                        while (true){
+                            x = generator.nextInt(3) - 1;
+                            y = generator.nextInt(3) - 1;
+                            if (gameState[i + x][j + y] == 0){
+                                robot.moveMouse(i + x, j + y);
+                                robot.clickMouse(left);
+                                break outer; 
+                            }
+                        }
+                    }
+                }
+                if (i == rows - 2 && j == columns - 2){
+                    cellState++;
+                    i = 1;
+                    j = 1;
+                    if (cellState == 6 && cellCounter == 4){
+                        System.exit(0);
+                    }
+                    if (cellState == 6){
+                        cellCounter++;
+                        cellState = 1;
+                    }
+                }
             }
-        } while (!isProperCell);
-        
-        robot.moveMouse(x, y);
-        robot.clickMouse(left);
+        }
     }
     
     public void solveGame() throws InterruptedException{
-        makeRandomMove();
-//        robot.moveMouse(1,1);
-//        System.exit(0);
-        int temp = 0, counter = 0;
+        robot.moveMouse(5, 4);
+        robot.clickMouse(left);
+ 
+        int counter = 0, tries = 0;
         while (true){
             hasGameStateChanged = false;
             Thread.sleep(20);
             game.readGameState(robot);
-//            System.exit(0);
-//            Thread.sleep(20);
             
             flagNumber(1);
             flagNumber(2);
             flagNumber(3);
             flagNumber(4);
             flagNumber(5);
-
+            flagNumber(6);
             clearUnknownCells();
 
-            if (temp++ == 150)
+            if (tries++ == maxTries)
                 System.exit(0);
             if (hasGameStateChanged){
                 counter = 0;
@@ -147,8 +185,7 @@ public class MinesweeperSolver {
             }
             else {
                 counter++;
-                if (counter == 4){
-                    Thread.sleep(2000);
+                if (counter == 3){
                     makeRandomMove();
                     counter = 0;
                 }
