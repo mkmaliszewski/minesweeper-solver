@@ -45,7 +45,7 @@ public class MinesweeperGame {
         
         for (int i = 1; i < rows - 1; i++){
             for (int j = 1; j < columns - 1; j++){
-                gameState[i][j] = readCellState(i, j, screen);               
+                gameState[i][j] = readCellState(i, j, screen);
                 if (gameState[i][j] == 8){
                     System.exit(0);
                 }

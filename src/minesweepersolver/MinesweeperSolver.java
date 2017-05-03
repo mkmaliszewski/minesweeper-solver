@@ -64,7 +64,7 @@ public class MinesweeperSolver {
         }
     }
     
-    public void flagNumber(int number) throws InterruptedException{
+    public void flagNumber(int number){
         int[][] gameState;
         int rows = game.returnRows();
         int columns = game.returnColumns();
