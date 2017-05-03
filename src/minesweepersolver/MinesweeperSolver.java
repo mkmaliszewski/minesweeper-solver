@@ -34,7 +34,7 @@ public class MinesweeperSolver {
     public void clearUnknownCells(){
         int rows = game.returnRows();
         int columns = game.returnColumns();
-        int howManyFlags;
+        int flags;
         boolean isUnknownCell;
         int [][] gameState = game.returnGameState();
         
@@ -42,12 +42,12 @@ public class MinesweeperSolver {
             for (int j = 1; j < columns - 1; j++){
                 if (gameState[i][j] != 0 && gameState[i][j] != 9 &&
                         gameState[i][j] != -1 && gameState[i][j] != 7){
-                    howManyFlags = 0;
+                    flags = 0;
                     isUnknownCell = false;
                     for (int k = -1; k < 2; k++){
                         for (int l = -1; l < 2; l++){
                             if (gameState[i + k][j + l] == 7){
-                                howManyFlags++;
+                                flags++;
                             }
                             else if(gameState[i + k][j + l] == 0){
                                 isUnknownCell = true;
@@ -55,7 +55,7 @@ public class MinesweeperSolver {
                         }
                     }
                     
-                    if (howManyFlags == gameState[i][j] && isUnknownCell){
+                    if (flags == gameState[i][j] && isUnknownCell){
                         robot.moveMouse(i, j);
                         robot.pressSpace();  
                     }
@@ -64,7 +64,7 @@ public class MinesweeperSolver {
         }
     }
     
-    public void flagNumber(int number){
+    public void flagNumber(int number) throws InterruptedException{
         int[][] gameState;
         int rows = game.returnRows();
         int columns = game.returnColumns();
@@ -109,7 +109,7 @@ public class MinesweeperSolver {
     public void makeRandomMove() throws InterruptedException{
         int[][] gameState = game.returnGameState();
         Random generator = new Random();
-        int x, y, cellState = 1, unknownCells, cellCounter= 2;
+        int x, y, cellState = 1, unknownCells, cellCounter = 2;
         int rows = game.returnRows();
         int columns = game.returnColumns();
         
@@ -181,7 +181,6 @@ public class MinesweeperSolver {
                 System.exit(0);
             if (hasGameStateChanged){
                 counter = 0;
-                continue;
             }
             else {
                 counter++;
