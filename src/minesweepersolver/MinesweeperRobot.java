@@ -34,7 +34,8 @@ public class MinesweeperRobot {
     }
     
     public void moveMouse(int positionX, int positionY){
-        robot.mouseMove(offX + distance *(positionY - 1), offY + distance * (positionX - 1));
+        robot.mouseMove(offX + distance *(positionY - 1),
+                offY + distance * (positionX - 1));
     }
     
     public BufferedImage makeScreenshot(){
