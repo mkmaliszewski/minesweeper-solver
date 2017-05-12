@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 public class MinesweeperRobot {
     private Robot robot;
     private int offX, offY;
+    private int distance;
 
     public MinesweeperRobot(String level){
         try {
@@ -29,10 +30,11 @@ public class MinesweeperRobot {
                                     break;
         }
         offY = 310;
+        distance = 35;
     }
     
     public void moveMouse(int positionX, int positionY){
-        robot.mouseMove(offX + 35 *(positionY - 1), offY + 35 * (positionX - 1));
+        robot.mouseMove(offX + distance *(positionY - 1), offY + distance * (positionX - 1));
     }
     
     public BufferedImage makeScreenshot(){

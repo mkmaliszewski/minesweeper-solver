@@ -7,7 +7,7 @@ public class MinesweeperGame {
     // 0 - unknown, 1 - 6 - number of mines,
     // 7 - flag, 8 - mine, 9 - known, -1 - out of bounds
     private int[][] gameState;
-    private int rows, columns, offX, offY;
+    private int rows, columns, offX, offY, distance;
      
     public MinesweeperGame(String level){
         switch (level){
@@ -25,6 +25,7 @@ public class MinesweeperGame {
                                     break;
         }
         offY = 310;
+        distance = 35;
         gameState = new int[rows][columns];
         
         //game initialization
@@ -54,14 +55,14 @@ public class MinesweeperGame {
     }
     
     public int readCellState(int column, int row, BufferedImage screen){
-        Color color = new Color(screen.getRGB(offX + 35 * (row - 1),
-                offY + 35 * (column - 1)));
+        Color color = new Color(screen.getRGB(offX + distance * (row - 1),
+                offY + distance * (column - 1)));
         int sum = color.getRed() + color.getGreen() + color.getBlue();
         int state;
 
         switch(sum){
-            case 567:   color = new Color(screen.getRGB(offX + 35 * (row - 1),
-                            offY + 35 * (column - 1) - 17));
+            case 567:   color = new Color(screen.getRGB(offX + distance * (row - 1),
+                            offY + distance * (column - 1) - distance/2));
                         sum = color.getRed() + color.getGreen() + color.getBlue();
                         if (sum == 756)
                             state = 0;
