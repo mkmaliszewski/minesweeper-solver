@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 public class MinesweeperSolver {
     private MinesweeperGame game;
     private MinesweeperRobot robot;
-    private int left = InputEvent.BUTTON1_DOWN_MASK;
-    private int right = InputEvent.BUTTON3_DOWN_MASK;
+    private final int left = InputEvent.BUTTON1_DOWN_MASK;
+    private final int right = InputEvent.BUTTON3_DOWN_MASK;
     private boolean hasGameStateChanged;
     private int maxTries;
     
@@ -107,7 +107,7 @@ public class MinesweeperSolver {
     }
     
     private void makeRandomMove() throws InterruptedException{
-        int[][] gameState = game.returnGameState();
+        int[][] gameState;
         Random generator = new Random();
         int x, y, cellState = 1, unknownCells, cellCounter = 2;
         int rows = game.returnRows();

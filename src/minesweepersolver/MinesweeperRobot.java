@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 
 public class MinesweeperRobot {
     private Robot robot;
-    private int offX, offY;
-    private int distance;
+    private int offX;
+    private final int distance, offY;
 
     public MinesweeperRobot(String level){
         try {

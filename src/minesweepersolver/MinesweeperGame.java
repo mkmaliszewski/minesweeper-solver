@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 public class MinesweeperGame {
     // 0 - unknown, 1 - 6 - number of mines,
     // 7 - flag, 8 - mine, 9 - known, -1 - out of bounds
-    private int[][] gameState;
+    private final int[][] gameState;
     private int rows, columns, offX, offY, distance;
      
     public MinesweeperGame(String level){
