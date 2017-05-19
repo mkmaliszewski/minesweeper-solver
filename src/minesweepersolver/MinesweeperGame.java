@@ -54,7 +54,7 @@ public class MinesweeperGame {
         }
     }
     
-    public int readCellState(int column, int row, BufferedImage screen){
+    private int readCellState(int column, int row, BufferedImage screen){
         Color color = new Color(screen.getRGB(offX + distance * (row - 1),
                 offY + distance * (column - 1)));
         int sum = color.getRed() + color.getGreen() + color.getBlue();

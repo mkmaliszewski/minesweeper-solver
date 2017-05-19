@@ -31,7 +31,7 @@ public class MinesweeperSolver {
         }
     }
     
-    public void clearUnknownCells(){
+    private void clearUnknownCells(){
         int rows = game.returnRows();
         int columns = game.returnColumns();
         int flags;
@@ -64,7 +64,7 @@ public class MinesweeperSolver {
         }
     }
     
-    public void flagNumber(int number){
+    private void flagNumber(int number){
         int[][] gameState;
         int rows = game.returnRows();
         int columns = game.returnColumns();
@@ -106,7 +106,7 @@ public class MinesweeperSolver {
         }
     }
     
-    public void makeRandomMove() throws InterruptedException{
+    private void makeRandomMove() throws InterruptedException{
         int[][] gameState = game.returnGameState();
         Random generator = new Random();
         int x, y, cellState = 1, unknownCells, cellCounter = 2;
@@ -159,7 +159,7 @@ public class MinesweeperSolver {
         }
     }
     
-    public void solveGame() throws InterruptedException{
+    private void solveGame() throws InterruptedException{
         robot.moveMouse(5, 4);
         robot.clickMouse(left);
  
