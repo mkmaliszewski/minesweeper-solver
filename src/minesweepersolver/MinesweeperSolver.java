@@ -1,6 +1,8 @@
 package minesweepersolver;
 
 import java.awt.event.InputEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -95,7 +97,8 @@ public class MinesweeperSolver {
                     }
 
                     if ((unknownCells == 1 && flaggedCells == number - 1) || 
-                            (unknownCells == 2 && flaggedCells == number - 2)){
+                            (unknownCells == 2 && flaggedCells == number - 2) ||
+                            (unknownCells == 3 && flaggedCells == number - 3)){
                         robot.moveMouse(minePositionRow, minePositionColumn);
                         robot.clickMouse(right);
                         game.updateGameState(minePositionRow, minePositionColumn, 7);
@@ -106,7 +109,7 @@ public class MinesweeperSolver {
         }
     }
     
-    private void makeRandomMove() throws InterruptedException{
+    private void makeRandomMove(){
         int[][] gameState;
         Random generator = new Random();
         int x, y, cellState = 1, unknownCells, cellCounter = 2;
@@ -119,6 +122,7 @@ public class MinesweeperSolver {
                 gameState = game.returnGameState();
                 if (gameState[i][j] == cellState){
                     unknownCells = 0;
+                    List<Integer> availableCells = new ArrayList<>();
                     for (int k = -1; k < 2; k++){
                         for (int l = -1; l < 2; l++){
                             if (k == 0 && l == 0){
@@ -127,20 +131,29 @@ public class MinesweeperSolver {
                             
                             if (gameState[i + k][j + l] == 0){
                                 unknownCells++;
+                                availableCells.add(i + k);
+                                availableCells.add(j + l);
                             }
                         }
                     }
 
                     if (unknownCells == cellCounter){
-                        while (true){
-                            x = generator.nextInt(3) - 1;
-                            y = generator.nextInt(3) - 1;
-                            if (gameState[i + x][j + y] == 0){
-                                robot.moveMouse(i + x, j + y);
-                                robot.clickMouse(left);
-                                break outer; 
-                            }
-                        }
+                        int index = new Random().nextInt(availableCells.size() / 2);
+                        index *= 2;
+                        x = availableCells.remove(index);
+                        y = availableCells.remove(index);
+                        robot.moveMouse(x, y);
+                        robot.clickMouse(left);
+                        break outer;
+//                        while (true){
+//                            x = generator.nextInt(3) - 1;
+//                            y = generator.nextInt(3) - 1;
+//                            if (gameState[i + x][j + y] == 0){
+//                                robot.moveMouse(i + x, j + y);
+//                                robot.clickMouse(left);
+//                                break outer; 
+//                            }
+//                        }
                     }
                 }
                 if (i == rows - 2 && j == columns - 2){
